@@ -25,10 +25,12 @@ export default function Home() {
                 <Input type="text" placeholder="Nome" required onChange={(e) => setNome(e.target.value)} />
                 {
                   nome ? (
-                    // on click navigate to play
                     <Button>
-                      Começar
+                      <Link href='/play'>
+                        Começar
+                      </Link>
                     </Button>
+
                   ) : (
                     <Button disabled>
                       Começar
@@ -44,11 +46,11 @@ export default function Home() {
                 <Button onClick={() => setSelectNicknameScreen(true)}>
                   Jogar
                 </Button>
-                <Link href='/ranking'>
-                  <Button>
+                <Button>
+                  <Link href='/ranking'>
                     Ranking
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             )
           }

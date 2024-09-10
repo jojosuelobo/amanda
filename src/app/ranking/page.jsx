@@ -13,11 +13,11 @@ import Link from "next/link";
 export default function Ranking() {
     return (
         <section className="m-10">
-            <Link href='/'>
-                <Button>
+            <Button>
+                <Link href='/'>
                     Voltar
-                </Button>
-            </Link>
+                </Link>
+            </Button>
 
             <Table className="mt-10">
                 <TableCaption>...</TableCaption>
