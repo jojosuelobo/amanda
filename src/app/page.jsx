@@ -3,10 +3,12 @@
 import { useMyContext } from "@/app/context/context";
 import { useState } from 'react';
 import Image from "next/image";
+import Link from "next/link";
 
 import logo from '@/app/images/worldFlag.png';
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function Home() {
   const { nome, setNome } = useMyContext();
@@ -19,32 +21,34 @@ export default function Home() {
         <div>
           {
             selectNicknameScreen ? (
-              <div className="m-4 flex flex-col gap-8"> 
-                <input type="text" placeholder="username" required onChange={(e) => setNome(e.target.value)} />
+              <div className="m-4 flex flex-col gap-8">
+                <Input type="text" placeholder="Nome" required onChange={(e) => setNome(e.target.value)} />
                 {
                   nome ? (
                     // on click navigate to play
-                    <button>
+                    <Button>
                       Começar
-                    </button>
+                    </Button>
                   ) : (
-                    <button disabled>
+                    <Button disabled>
                       Começar
-                    </button>
+                    </Button>
                   )
                 }
-                <button onClick={() => setSelectNicknameScreen(false)}>
+                <Button onClick={() => setSelectNicknameScreen(false)}>
                   Voltar
-                </button>
+                </Button>
               </div>
             ) : (
-              <div onClick={() => setSelectNicknameScreen(true)} className="m-4 flex flex-col gap-8">
-                <Button>
+              <div className="m-4 flex flex-col gap-8">
+                <Button onClick={() => setSelectNicknameScreen(true)}>
                   Jogar
                 </Button>
-                <button>
-                  Ranking
-                </button>
+                <Link href='/ranking'>
+                  <Button>
+                    Ranking
+                  </Button>
+                </Link>
               </div>
             )
           }
