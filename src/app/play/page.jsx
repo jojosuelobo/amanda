@@ -9,6 +9,7 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { useMyContext } from "@/app/context/context";
+import Confetti from 'react-confetti'; // Importar a lib de confetes
 
 export default function Play() {
     const { points, setPoints } = useMyContext();
@@ -59,14 +60,22 @@ export default function Play() {
 
     const handleAnswerClick = (index) => {
         setRespostaSelecionada(index);
-        setRespostaCorreta(index === corretaIndex); // Verifica se a resposta selecionada é a correta
-        setPoints(points + (index === corretaIndex ? 1 : 0));
+        const isCorrect = index === corretaIndex;
+        setRespostaCorreta(isCorrect); // Verifica se a resposta selecionada é a correta
+        setPoints(points + (isCorrect ? 1 : 0));
         setClicked(true);
         setFeedbackVisible(true);
     };
 
+    // Definir a classe de background com base na resposta correta ou incorreta
+    const backgroundClass = clicked
+        ? respostaCorreta
+            ? "bg-green-500" // Verde para resposta correta
+            : "bg-red-500"   // Vermelho para resposta incorreta
+        : "bg-white";         // Branco por padrão
+
     return (
-        <section className="flex flex-col items-center justify-center h-screen">
+        <section className={`flex flex-col items-center justify-center h-screen transition-colors duration-500 ${backgroundClass}`}>
             <div className="mb-6">
                 <h2 className="text-2xl font-bold mb-4">Bloco {currentBloco.bloco}</h2>
                 <p className="text-lg mb-4">{currentPergunta}</p>
@@ -109,6 +118,13 @@ export default function Play() {
                 <Button onClick={handleNext} disabled={clicked}>
                     Próxima Pergunta
                 </Button>
+            )}
+
+            {/* Mostrar confetes se a resposta estiver correta */}
+            {respostaCorreta && (
+                <Confetti
+                    numberOfPieces={300} // Quantidade de confetes
+                />
             )}
         </section>
     );
