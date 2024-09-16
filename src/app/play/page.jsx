@@ -1,15 +1,12 @@
 "use client";
 
 import questions from '@/app/data/questions.json';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card";
 import { useMyContext } from "@/app/context/context";
 
@@ -19,15 +16,26 @@ export default function Play() {
     const [currentBlocoIndex, setCurrentBlocoIndex] = useState(0);
     const [currentPerguntaIndex, setCurrentPerguntaIndex] = useState(0);
     const [ultimaPergunta, setUltimaPergunta] = useState(false);
-    const [respostaSelecionada, setRespostaSelecionada] = useState(null); // Controle da resposta selecionada
-    const [respostaCorreta, setRespostaCorreta] = useState(null); // Controle se a resposta foi correta ou não
+    const [respostaSelecionada, setRespostaSelecionada] = useState(null);
+    const [respostaCorreta, setRespostaCorreta] = useState(null);
     const [clicked, setClicked] = useState(false);
+    const [feedbackVisible, setFeedbackVisible] = useState(false);
 
     const currentBloco = questions.blocos[currentBlocoIndex];
     const currentPerguntaObj = currentBloco.perguntas[currentPerguntaIndex];
     const currentPergunta = currentPerguntaObj.pergunta;
     const respostas = currentPerguntaObj.respostas;
     const corretaIndex = currentPerguntaObj.correta;
+
+    useEffect(() => {
+        let timer;
+        if (clicked) {
+            timer = setTimeout(() => {
+                handleNext();
+            }, 5000); // 5 segundos para ir para a próxima pergunta
+        }
+        return () => clearTimeout(timer); // Limpa o timer ao sair do efeito
+    }, [clicked]);
 
     const handleNext = () => {
         const isLastQuestionInBlock = currentPerguntaIndex === currentBloco.perguntas.length - 1;
@@ -45,13 +53,16 @@ export default function Play() {
         // Reset estado de seleção de resposta e feedback após mudar de pergunta
         setRespostaSelecionada(null);
         setRespostaCorreta(null);
+        setClicked(false);
+        setFeedbackVisible(false);
     };
 
     const handleAnswerClick = (index) => {
         setRespostaSelecionada(index);
         setRespostaCorreta(index === corretaIndex); // Verifica se a resposta selecionada é a correta
         setPoints(points + (index === corretaIndex ? 1 : 0));
-        setClicked(true)
+        setClicked(true);
+        setFeedbackVisible(true);
     };
 
     return (
@@ -61,32 +72,29 @@ export default function Play() {
                 <p className="text-lg mb-4">{currentPergunta}</p>
                 <p>Pontuação: {points}</p>
 
-                <button>
-                    <div className="space-y-2">
-                        {respostas.map((resposta, index) => (
-                            <Card
-                                key={index}
-                                className={`w-full p-4 cursor-pointer ${respostaSelecionada === index ? "bg-gray-200" : ""
-                                    }`}
-                                onClick={() => handleAnswerClick(index)}
-                            >
-                                <CardContent>
-                                    <p>{resposta}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </button>
-
+                <div className="space-y-2">
+                    {respostas.map((resposta, index) => (
+                        <Card
+                            key={index}
+                            className={`w-full p-4 ${respostaSelecionada === index ? "bg-gray-200" : ""
+                                } ${clicked ? "pointer-events-none" : "cursor-pointer"}`} // Desativa o clique após selecionar
+                            onClick={() => handleAnswerClick(index)}
+                        >
+                            <CardContent>
+                                <p>{resposta}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </div>
 
             {/* Feedback sobre a resposta correta ou errada */}
-            {respostaSelecionada !== null && (
+            {feedbackVisible && (
                 <div className="mb-4">
                     {respostaCorreta ? (
-                        <p className="text-green-500">Resposta Correta!</p>
+                        <p className="text-green-500">ACERTOU!</p>
                     ) : (
-                        <p className="text-red-500">Resposta Errada!</p>
+                        <p className="text-red-500">ERROU!</p>
                     )}
                 </div>
             )}
@@ -98,7 +106,7 @@ export default function Play() {
                     </Link>
                 </Button>
             ) : (
-                <Button onClick={handleNext} disabled={respostaSelecionada === null}>
+                <Button onClick={handleNext} disabled={clicked}>
                     Próxima Pergunta
                 </Button>
             )}
