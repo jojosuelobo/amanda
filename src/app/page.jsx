@@ -15,8 +15,7 @@ export default function Home() {
   const [selectNicknameScreen, setSelectNicknameScreen] = useState(false)
 
   return (
-    <>
-      <section className="flex flex-col justify-center items-center h-screen">
+      <section className="flex flex-col justify-center items-center h-screen bg-bg">
         <Image src={logo} alt="logo" className="w-[30%] h-auto max-w-full animate-spin-slow m-8" />
         <div>
           {
@@ -56,6 +55,5 @@ export default function Home() {
           }
         </div>
       </section>
-    </>
   );
 }

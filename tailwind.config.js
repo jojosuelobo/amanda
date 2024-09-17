@@ -7,13 +7,18 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	colors: {
-  		bg: '#F9F9FC'
-  	},
+  	// colors: {
+  	// 	bg: '#F9F9FC',
+	// 	error: '#FF9494',
+	// 	suscess: '#7BE495'
+  	// },
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			bg: '#F9F9FC',
+			error: '#FF9494',
+			suscess: '#7BE495',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

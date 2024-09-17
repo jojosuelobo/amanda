@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import { useMyContext } from "@/app/context/context";
 import Confetti from 'react-confetti'; // Importar a lib de confetes
+import useSound from 'use-sound';
+//import success from '../../../sound/successMP3.mp3';
 
 export default function Play() {
     const { points, setPoints } = useMyContext();
@@ -27,6 +29,8 @@ export default function Play() {
     const currentPergunta = currentPerguntaObj.pergunta;
     const respostas = currentPerguntaObj.respostas;
     const corretaIndex = currentPerguntaObj.correta;
+
+    //const [play] = useSound(success);
 
     useEffect(() => {
         let timer;
@@ -62,6 +66,9 @@ export default function Play() {
         setRespostaSelecionada(index);
         const isCorrect = index === corretaIndex;
         setRespostaCorreta(isCorrect); // Verifica se a resposta selecionada é a correta
+        // if (isCorrect) {
+        //     play();
+        // }
         setPoints(points + (isCorrect ? 1 : 0));
         setClicked(true);
         setFeedbackVisible(true);
@@ -70,13 +77,13 @@ export default function Play() {
     // Definir a classe de background com base na resposta correta ou incorreta
     const backgroundClass = clicked
         ? respostaCorreta
-            ? "bg-green-500" // Verde para resposta correta
-            : "bg-red-500"   // Vermelho para resposta incorreta
-        : "bg-white";         // Branco por padrão
+            ? "bg-suscess" // Verde para resposta correta
+            : "bg-error"   // Vermelho para resposta incorreta
+        : "bg-bg";         // Branco por padrão
 
     return (
-        <section className={`flex flex-col items-center justify-center h-screen transition-colors duration-500 ${backgroundClass}`}>
-            <div className="mb-6">
+        <section className={`flex flex-col items-center justify-center h-screen duration-500 ${backgroundClass} transition-colors`}>
+            <div className="mb-6 bg-red-500!">
                 <h2 className="text-2xl font-bold mb-4">Bloco {currentBloco.bloco}</h2>
                 <p className="text-lg mb-4">{currentPergunta}</p>
                 <p>Pontuação: {points}</p>
